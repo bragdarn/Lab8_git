@@ -27,12 +27,11 @@ public class GUITowerDefence extends JFrame {
 
   // A representation of the complete game
   private TowerDefenceLevel level;
-  private Monster monster = new Monster(0,0);
-  private JPanel monsterPanel;
   private JPanel positionPanel;
-  //private JPanel mainPanel = new JPanel();
   private JLabel towerLabel;
   private int clickCounter = 1;
+  private Position currentPos;
+
 
 
 
@@ -42,11 +41,12 @@ public class GUITowerDefence extends JFrame {
   public static void main(String[] args) {
 
     // Change this to try out different levels
-    TowerDefenceLevel level = TowerDefenceLevel.buildSimpleLevel();
+    TowerDefenceLevel level = TowerDefenceLevel.buildDefaultLevel();
 
     // Create the GUI and set it to be visible
     GUITowerDefence gui = new GUITowerDefence(level);
     gui.setVisible(true);
+
 
 
   }
@@ -68,7 +68,6 @@ public class GUITowerDefence extends JFrame {
     mainPanel.setLayout(new GridLayout(levelHeight, levelWidth));
     this.add(mainPanel);
     boolean[][] passable = level.getPassable();
-    monsterPanel = buildMonsterPanel(monster.getMaxHealth());
     //clickListener click = new clickListener();
     BoxListener box = new BoxListener();
     for (int row = 0; row < levelHeight; row++) {
@@ -76,9 +75,6 @@ public class GUITowerDefence extends JFrame {
         positionPanel = new JPanel();
         positionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         if(!passable[row][col]) {
-          //JButton button = createButton();
-          //button.addActionListener(click);
-          //positionPanel.add(button);
           positionPanel.addMouseListener(box);
           positionPanel.setBackground(Color.GREEN);
         }
@@ -96,7 +92,9 @@ public class GUITowerDefence extends JFrame {
     //System.out.println(positionPanels.keySet());
 //    JPanel panel1 =  positionPanels.get("10");
 //    panel1.add(monsterPanel);
-
+    Monster monster = new Monster(level.getStartRow(),level.getStartCol());
+    MonsterGui(monster.getPosId(),monster);
+    testMonsterPositions(monster);
 
 
     // Start the timer and set it to call the event loop each second
@@ -147,8 +145,8 @@ public class GUITowerDefence extends JFrame {
     return getIconLabel("icons/tower-icon.png");
   }
 // Builds the monsterLabel on a new panel and returns it
-  private JPanel buildMonsterPanel(int monsterHealth) {
-    JPanel panel = new JPanel();
+  private JPanel buildMonsterPanel(JPanel panel,int monsterHealth) {
+
     panel.setBackground(Color.WHITE);
     panel.setLayout(new BorderLayout());
 
@@ -187,7 +185,22 @@ private JPanel buildTowerGui(JPanel towerPanel) {
         revalidate();
         repaint();
         clickCounter++;
+        }
+        else{
+          System.out.println("Max number of towers built");
       }
+    }
+}
+private void MonsterGui(String pos,Monster monster){
+    JPanel monsterPanel = positionPanels.get(pos);
+    buildMonsterPanel(monsterPanel,monster.getMaxHealth());
+    revalidate();
+    repaint();
+}
+private void testMonsterPositions(Monster monster){
+     List<String> positions = monster.checkNextPositions(monster.getMonsterPos(),level);
+    for(String p: positions){
+      System.out.println(p);
     }
 }
 }

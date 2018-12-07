@@ -39,6 +39,14 @@ public class TowerDefenceLevel {
 
     }
 
+    public int getStartRow() {
+        return startRow;
+    }
+
+    public int getStartCol() {
+        return startCol;
+    }
+
     public int getHeight() {
     return height;
     }
