@@ -147,7 +147,7 @@ public class GUITowerDefence extends JFrame {
     return new JLabel(ii);
   }
 
-  
+
   private JLabel buildTowerLabel() {
     return getIconLabel("icons/tower-icon.png");
   }

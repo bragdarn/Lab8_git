@@ -75,8 +75,10 @@ public class Monster extends Position {
             }
         }
         //checks if square to the right is passable
-        if (passable[currentRow][currentCol + 1]) {
-            right = Integer.toString(currentRow)+Integer.toString(currentCol+1);
+        if(currentCol<level.getWidth()-1) {
+            if (passable[currentRow][currentCol + 1]) {
+                right = Integer.toString(currentRow) + Integer.toString(currentCol + 1);
+            }
         }
         //adds the strings to the list if they are not empty
         if (above.equals("")){}
