@@ -95,6 +95,7 @@ public class GUITowerDefence extends JFrame {
 //    panel1.add(monsterPanel);
    this.monster = new Monster(level,level.getStartRow(),level.getStartCol());
    setMonsterGui(monster.getPosId(),monster);
+   monster.setLastPos(monster.getPosId());
 //    testMonsterPositions(monster);
 
 
@@ -115,17 +116,22 @@ public class GUITowerDefence extends JFrame {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-      monster.move();
-      setMonsterGui(monster.getPosId(),monster);
-      boolean gameOver = false; // TODO
+      String pos = monster.move();
+      JPanel lastPosPanel = positionPanels.get(monster.getPosId());
+      lastPosPanel.removeAll();
+      monster.setLastPos(monster.getPosId());
+      monster.setPosId(pos);
+      monster.setRow(Integer.parseInt(pos.substring(0,1)));
+      monster.setCol(Integer.parseInt(pos.substring(1,2)));
+      setMonsterGui(pos, monster);
+
+      boolean gameOver = false;
 
       if (gameOver) {
         setTitle("Game over!");
         timer.stop();
       }
 
-      // These two commands are necessary to properly
-      // display all the updated elements of the GUI.
       revalidate();
       repaint();
 
@@ -141,7 +147,7 @@ public class GUITowerDefence extends JFrame {
     return new JLabel(ii);
   }
 
-  // Just some examples, you can change them however you like.
+  
   private JLabel buildTowerLabel() {
     return getIconLabel("icons/tower-icon.png");
   }
@@ -193,8 +199,6 @@ private JPanel buildTowerGui(JPanel towerPanel) {
     }
 }
 private void setMonsterGui(String pos,Monster monster){
-    JPanel lastPosPanel = positionPanels.get(monster.getPosId());
-    lastPosPanel.removeAll();
     JPanel monsterPanel = positionPanels.get(pos);
     buildMonsterPanel(monsterPanel,monster.getCurrentHealth());
     revalidate();
