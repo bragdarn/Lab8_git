@@ -39,6 +39,14 @@ public class TowerDefenceLevel {
 
     }
 
+    public int getTargetRow() {
+        return targetRow;
+    }
+
+    public int getTargetCol() {
+        return targetCol;
+    }
+
     public int getStartRow() {
         return startRow;
     }

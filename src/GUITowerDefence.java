@@ -30,8 +30,7 @@ public class GUITowerDefence extends JFrame {
   private JPanel positionPanel;
   private JLabel towerLabel;
   private int clickCounter = 1;
-  private Position currentPos;
-
+  private Monster monster;
 
 
 
@@ -67,9 +66,11 @@ public class GUITowerDefence extends JFrame {
     JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new GridLayout(levelHeight, levelWidth));
     this.add(mainPanel);
+
     boolean[][] passable = level.getPassable();
-    //clickListener click = new clickListener();
+
     BoxListener box = new BoxListener();
+
     for (int row = 0; row < levelHeight; row++) {
       for (int col = 0; col < levelWidth; col++) {
         positionPanel = new JPanel();
@@ -82,7 +83,7 @@ public class GUITowerDefence extends JFrame {
 
 
         // Add the panel to the 'positionPanels' map so we can access it
-        // later (with positionPanels.get(posId)).
+        // later with positionPanels.get(posId);
         Position pos = new Position(row,col);
         String posId = pos.getPosId();
         positionPanels.put(posId, positionPanel);
@@ -92,9 +93,10 @@ public class GUITowerDefence extends JFrame {
     //System.out.println(positionPanels.keySet());
 //    JPanel panel1 =  positionPanels.get("10");
 //    panel1.add(monsterPanel);
-    Monster monster = new Monster(level.getStartRow(),level.getStartCol());
-    MonsterGui(monster.getPosId(),monster);
-    testMonsterPositions(monster);
+   this.monster = new Monster(level,level.getStartRow(),level.getStartCol());
+   setMonsterGui(monster.getPosId(),monster);
+//    testMonsterPositions(monster);
+
 
 
     // Start the timer and set it to call the event loop each second
@@ -113,9 +115,8 @@ public class GUITowerDefence extends JFrame {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-      // Here you can implement the logic to advance the game by one step
-      // and update the GUI.
-
+      monster.move();
+      setMonsterGui(monster.getPosId(),monster);
       boolean gameOver = false; // TODO
 
       if (gameOver) {
@@ -191,16 +192,14 @@ private JPanel buildTowerGui(JPanel towerPanel) {
       }
     }
 }
-private void MonsterGui(String pos,Monster monster){
+private void setMonsterGui(String pos,Monster monster){
+    JPanel lastPosPanel = positionPanels.get(monster.getPosId());
+    lastPosPanel.removeAll();
     JPanel monsterPanel = positionPanels.get(pos);
-    buildMonsterPanel(monsterPanel,monster.getMaxHealth());
+    buildMonsterPanel(monsterPanel,monster.getCurrentHealth());
     revalidate();
     repaint();
 }
-private void testMonsterPositions(Monster monster){
-     List<String> positions = monster.checkNextPositions(monster.getMonsterPos(),level);
-    for(String p: positions){
-      System.out.println(p);
-    }
+
 }
-}
+
