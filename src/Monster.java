@@ -1,4 +1,5 @@
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,6 +21,8 @@ public class Monster extends Position {
         while(nextPos.equals(lastPos)){
           nextPos = nextPosition(possiblePositions);
         }
+        JPanel cookie =  GUITowerDefence.positionPanels.get(nextPos);
+        cookie.removeAll();
         return nextPos;
     }
 

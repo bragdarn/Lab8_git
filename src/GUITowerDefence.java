@@ -15,7 +15,7 @@ import java.util.List;
 public class GUITowerDefence extends JFrame {
 
   // A map that assigns a panel to each position in the game
-  private final Map<String, JPanel> positionPanels = new HashMap<>();
+  public static final Map<String, JPanel> positionPanels = new HashMap<>();
 
   // The size of each position panel
   private static final int POSITION_SIZE = 100;
@@ -55,7 +55,7 @@ public class GUITowerDefence extends JFrame {
 
   public GUITowerDefence(TowerDefenceLevel level) {
 
-    this.setTitle("Tower Defence");
+    this.setTitle("SAVE THE COOKIES!");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     this.level = level;
@@ -79,7 +79,9 @@ public class GUITowerDefence extends JFrame {
       for (int col = 0; col < levelWidth; col++) {
         positionPanel = new JPanel();
         positionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        positionPanel.add(buildCookies());
         if(!passable[row][col]) {
+          positionPanel.removeAll();
           positionPanel.addMouseListener(box);
           positionPanel.setBackground(Color.GREEN);
           positionPanel.setToolTipText(Integer.toString(row)+Integer.toString(col));
@@ -94,14 +96,11 @@ public class GUITowerDefence extends JFrame {
         positionPanels.put(posId, positionPanel);
       }
     }
-      //test for hashmap keys
-    //System.out.println(positionPanels.keySet());
-//    JPanel panel1 =  positionPanels.get("10");
-//    panel1.add(monsterPanel);
+    //creates the monster in level
    this.monster = new Monster(level,level.getStartRow(),level.getStartCol());
    setMonsterGui(monster.getPosId(),monster);
    monster.setLastPos(monster.getPosId());
-//    testMonsterPositions(monster);
+
 
 
 
@@ -126,7 +125,7 @@ public class GUITowerDefence extends JFrame {
         gameOver = true;
       }
       if (gameOver) {
-        setTitle("Game over! YOU LOSE!");
+        setTitle("Game over! all cookies have been eaten!");
         timer.stop();
         return;
       }
@@ -146,7 +145,7 @@ public class GUITowerDefence extends JFrame {
         }
       }
       if(monster.getCurrentHealth() <= 0){
-        setTitle("YOU WIN!");
+        setTitle("Cookie monster has been defeated");
         JPanel lastPanel = positionPanels.get(monster.getPosId());
         lastPanel.removeAll();
         timer.stop();
@@ -167,7 +166,9 @@ public class GUITowerDefence extends JFrame {
     ImageIcon ii = new ImageIcon(url);
     return new JLabel(ii);
   }
-
+  private JLabel buildCookies(){
+    return getIconLabel("icons/cookie.png");
+  }
 
   private JLabel buildTowerLabel() {
     return getIconLabel("icons/tower-icon.png");
@@ -178,7 +179,7 @@ public class GUITowerDefence extends JFrame {
     panel.setBackground(Color.WHITE);
     panel.setLayout(new BorderLayout());
 
-    JLabel monsterIcon = getIconLabel("icons/monster10.gif");
+    JLabel monsterIcon = getIconLabel("icons/cookieMonstah.gif");
     panel.add(monsterIcon, BorderLayout.CENTER);
 
     JLabel healthLabel = new JLabel(Integer.toString(monsterHealth));
