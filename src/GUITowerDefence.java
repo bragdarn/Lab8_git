@@ -25,12 +25,15 @@ public class GUITowerDefence extends JFrame {
   private static final int SPEED = 1000;
   private static final int PAUSE = 3000;
 
-  // A representation of the complete game
+  private List<Tower> towers = new ArrayList<>();
   private TowerDefenceLevel level;
   private JPanel positionPanel;
   private JLabel towerLabel;
   private int clickCounter = 1;
   private Monster monster;
+  private int endRow;
+  private int endCol;
+  boolean gameOver = false;
 
 
 
@@ -70,7 +73,8 @@ public class GUITowerDefence extends JFrame {
     boolean[][] passable = level.getPassable();
 
     BoxListener box = new BoxListener();
-
+    //Creates all the positionpanels for each ow and column of the map. only adds mouseListener to the green ones.
+    // I.E where the monster cannot go
     for (int row = 0; row < levelHeight; row++) {
       for (int col = 0; col < levelWidth; col++) {
         positionPanel = new JPanel();
@@ -78,6 +82,7 @@ public class GUITowerDefence extends JFrame {
         if(!passable[row][col]) {
           positionPanel.addMouseListener(box);
           positionPanel.setBackground(Color.GREEN);
+          positionPanel.setToolTipText(Integer.toString(row)+Integer.toString(col));
         }
         mainPanel.add(positionPanel);
 
@@ -115,7 +120,17 @@ public class GUITowerDefence extends JFrame {
   class EventLoop implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-
+      endRow = level.getTargetRow();
+      endCol = level.getTargetCol();
+      if(monster.getRow() == endRow && monster.getCol() == endCol){
+        gameOver = true;
+      }
+      if (gameOver) {
+        setTitle("Game over! YOU LOSE!");
+        timer.stop();
+        return;
+      }
+      //moving the monster
       String pos = monster.move();
       JPanel lastPosPanel = positionPanels.get(monster.getPosId());
       lastPosPanel.removeAll();
@@ -124,12 +139,18 @@ public class GUITowerDefence extends JFrame {
       monster.setRow(Integer.parseInt(pos.substring(0,1)));
       monster.setCol(Integer.parseInt(pos.substring(1,2)));
       setMonsterGui(pos, monster);
-
-      boolean gameOver = false;
-
-      if (gameOver) {
-        setTitle("Game over!");
+      //see if towers are in range and if so damages the monster for each tower
+      for(Tower t: towers){
+        if(t.inRange(monster,level)){
+          t.attack(monster);
+        }
+      }
+      if(monster.getCurrentHealth() <= 0){
+        setTitle("YOU WIN!");
+        JPanel lastPanel = positionPanels.get(monster.getPosId());
+        lastPanel.removeAll();
         timer.stop();
+        return;
       }
 
       revalidate();
@@ -166,9 +187,10 @@ public class GUITowerDefence extends JFrame {
 
     return panel;
   }
-private Tower createTower(String pos){
+private void createTower(String pos){
     Tower tower = new Tower(pos);
-    return tower;
+    towers.add(tower);
+
 } //Creates the tower label and puts it on a specific position
 private JPanel buildTowerGui(JPanel towerPanel) {
 
@@ -182,12 +204,14 @@ private JPanel buildTowerGui(JPanel towerPanel) {
 
 
 //Builds the tower on the position that was clicked
-
+//also creates a tower object on that position
   public class BoxListener extends MouseAdapter{
     public void mouseClicked(MouseEvent event){
       if (clickCounter<=level.getMaxTowers()) {
         JPanel clickedPanel = (JPanel) event.getSource();
         buildTowerGui(clickedPanel);
+        String pos = clickedPanel.getToolTipText();
+        createTower(pos);
         System.out.println("Tower Built");
         revalidate();
         repaint();

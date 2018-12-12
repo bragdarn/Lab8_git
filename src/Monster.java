@@ -9,7 +9,7 @@ public class Monster extends Position {
     public String lastPos = "";
     public Monster(TowerDefenceLevel level, int row, int col) {
         super(row, col);
-        maxHealth = 10;
+        maxHealth = 8;
         this.level = level;
         this.currentHealth = maxHealth;
     }
