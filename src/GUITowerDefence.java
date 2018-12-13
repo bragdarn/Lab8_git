@@ -129,6 +129,12 @@ public class GUITowerDefence extends JFrame {
         timer.stop();
         return;
       }
+      for(Tower t: towers){
+        if(t.inRange(monster,level)){
+          t.attack(monster);
+        }
+      }
+
       //moving the monster
       String pos = monster.move();
       JPanel lastPosPanel = positionPanels.get(monster.getPosId());
@@ -139,11 +145,7 @@ public class GUITowerDefence extends JFrame {
       monster.setCol(Integer.parseInt(pos.substring(1,2)));
       setMonsterGui(pos, monster);
       //see if towers are in range and if so damages the monster for each tower
-      for(Tower t: towers){
-        if(t.inRange(monster,level)){
-          t.attack(monster);
-        }
-      }
+
       if(monster.getCurrentHealth() <= 0){
         setTitle("Cookie monster has been defeated");
         JPanel lastPanel = positionPanels.get(monster.getPosId());
@@ -210,6 +212,10 @@ private JPanel buildTowerGui(JPanel towerPanel) {
     public void mouseClicked(MouseEvent event){
       if (clickCounter<=level.getMaxTowers()) {
         JPanel clickedPanel = (JPanel) event.getSource();
+        if(clickedPanel.getIgnoreRepaint()){
+          return;
+        }
+        clickedPanel.setIgnoreRepaint(true);
         buildTowerGui(clickedPanel);
         String pos = clickedPanel.getToolTipText();
         createTower(pos);

@@ -46,19 +46,19 @@ public class Tower {
             }
         }
         //if tower is below monster
-        if(monsterRow>level.getHeight()-1){
-            if(towerRow == monsterRow +1 && towerCol == monsterCol){
+        if(monsterRow<level.getHeight()){
+            if(towerRow == monsterRow && towerCol == monsterCol){
                 return true;
             }
         }
         //if tower is below to the left of monster
-        if(monsterRow>level.getHeight()-1 && monsterCol>0){
+        if(monsterRow<level.getHeight() && monsterCol>0){
             if(towerRow == monsterRow +1 && towerCol == monsterCol-1){
                 return true;
             }
         }
         //if tower is below to the right of monster
-        if(monsterRow>level.getHeight()-1 && towerCol<level.getWidth()-1){
+        if(monsterRow<level.getHeight() && towerCol<level.getWidth()-1){
             if(towerRow == monsterRow +1 && towerCol == monsterCol+1){
                 return true;
             }
@@ -75,8 +75,6 @@ public class Tower {
                 return true;
             }
         }
-
-
 
         return false;
     }

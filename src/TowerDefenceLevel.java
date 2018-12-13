@@ -82,7 +82,7 @@ public class TowerDefenceLevel {
                 { true  , true  , true , false, true,  false , false , false },
                 { false , false , false, false, true,  true  , true  , true  }
         };
-        return new TowerDefenceLevel(3,8,passable,1,0,2,7,11);
+        return new TowerDefenceLevel(3,8,passable,1,0,2,7,6);
     }
 
     public static TowerDefenceLevel buildAdvancedLevel() {
