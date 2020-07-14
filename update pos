@@ -1,0 +1,20 @@
+  // IN GUI CLASS
+// Create monster
+    Monster monster = new Monster(level.getStartRow(),level.getStartCol());
+    monsterGui(monster.getPosId(),monster);
+
+    // Remove old monsterPanel
+    JPanel currentMonsterPanel = positionPanels.get(monster.getPosId());
+    currentMonsterPanel.removeAll();
+
+    // Change position
+    monster.checkNextPos();
+    monsterGui(monster.getPosId(),monster);
+    
+    
+    //IN MONSTER CLASS
+    public void updatePos(int row, int col) {
+        monsterPos.setCol(col);
+        monsterPos.setRow(row);
+        posId = monsterPos.toString();
+    }
